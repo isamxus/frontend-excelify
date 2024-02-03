@@ -1,0 +1,8 @@
+dist
+node_modules
+.npmignore
+example
+coverage
+package-lock.json
+webpack.config.js
+test.vue

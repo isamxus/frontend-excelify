@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "es2015",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "outDir": "./dist/types",
+    "lib": ["esnext", "dom", "esnext.asynciterable"],
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "emitDeclarationOnly": true,
+    "sourceMap": true,
+    "declaration": true,
+    "jsx": "preserve",
+    "experimentalDecorators": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}
