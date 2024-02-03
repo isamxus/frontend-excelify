@@ -1,5 +1,7 @@
 # frontend-excelify
 
+[![codecov](https://codecov.io/gh/isamxus/frontend-excelify/graph/badge.svg?token=XJO0THOPRI)](https://codecov.io/gh/isamxus/frontend-excelify)
+
 `frontend-excelify` is a library designed specifically for front-end development, based on [ExcelJS](https://github.com/exceljs/exceljs), aimed at simplifying the process of exporting from web applications to Excel files. It offers a range of convenient methods and configuration options, making the seamless conversion of front-end data to Excel files more intuitive and efficient.
 
 ## Table of Contents

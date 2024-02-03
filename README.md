@@ -1,5 +1,7 @@
 # frontend-excelify
 
+[![codecov](https://codecov.io/gh/isamxus/frontend-excelify/graph/badge.svg?token=XJO0THOPRI)](https://codecov.io/gh/isamxus/frontend-excelify)
+
 选择阅读语言版本 / Choose your reading language:
 
 - [中文版](README.md)
