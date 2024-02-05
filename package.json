@@ -2,7 +2,11 @@
   "name": "frontend-excelify",
   "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "dist/frontend-excelify.esm.js",
+  "types": "dist/types/index.d.ts",
+  "files": [
+    "dist/**/*"
+  ],
   "scripts": {
     "test": "karma start --single-run",
     "clean": "rimraf ./dist",

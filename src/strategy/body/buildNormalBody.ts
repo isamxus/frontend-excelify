@@ -236,11 +236,10 @@ function buildTableBody(
         defaultHeaderConfig.align || defaultBodyConfig.align;
     });
   });
-
   // 处理特殊单元格
   cells = Array.isArray(cells) ? cells : [cells];
   cells.forEach((item) => {
-    const {
+    let {
       rowIndex = 0,
       colIndex = 0,
       field,
@@ -252,8 +251,10 @@ function buildTableBody(
       const rowItem = rowItems[rowIndex];
       const rowNumber = rowItem.number;
       const cell = rowItem.getCell(colIndex + 1);
+      const colItem = leafNodeList[colIndex];
       const defaultCellConfig = getDefaultBodyConfig(item);
       let value: any;
+      field = field || colItem.field;
       if (field) value = data[rowIndex][field];
       value = getCellValue(item, value);
       cell.value = value;

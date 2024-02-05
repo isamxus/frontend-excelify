@@ -21,6 +21,7 @@ export default function useBuildExcel(
     if (!Array.isArray(context)) {
       context = [context];
     }
+
     context.forEach((item) => {
       item.excelJs = workbook;
       handleItem(item);
