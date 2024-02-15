@@ -74,25 +74,13 @@ export interface SideOptions extends CommonItemType {
 // 表格底部配置
 export interface FooterOptions extends CommonItemType {}
 
-// 合并配置
-export interface MergeOptions extends CommonItemType {
-  // 行起始位置
-  rowStartIndex?: number;
-  // 行结束位置
-  rowEndIndex?: number;
-  // 列起始位置
-  colStartIndex?: number;
-  // 列结束位置
-  colEndIndex?: number;
-}
-
 // 导出配置
 export interface ExportOptions {
   // excelJs上下文
   excelJs?: Workbook;
   // 工作表上下文
   sheet?: Worksheet;
-  // excel表名
+  // sheet页签名
   name?: string;
   // 头部配置
   header?: HeaderOptions;

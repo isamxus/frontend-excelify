@@ -63,24 +63,44 @@ function getDepth(data: Array<any>) {
   return Math.max(...data.map((item) => getDepth(item.children || []))) + 1;
 }
 
+function getColumnDepth(node: ColumnItem, currentDepth = 0): number {
+  if (!node.children || node.children.length === 0) {
+    return currentDepth + 1;
+  }
+  return Math.max(
+    ...node.children.map((child) => getColumnDepth(child, currentDepth + 1))
+  );
+}
+function getMaxWidth(node: ColumnItem): number {
+  if (!node.children || node.children.length === 0) {
+    return 1;
+  }
+  return node.children.reduce((total, child) => total + getMaxWidth(child), 0);
+}
+
 function getMatrix(root: ColumnItem) {
-  const queue = [root, "end"];
-  const matrix: Array<Array<ColumnItem>> = [[]];
-  while (queue.length > 1) {
-    const node = queue.shift() as any;
-    if (node === "end") {
-      matrix.push([]);
-      queue.push("end");
-      continue;
-    }
-    matrix[matrix.length - 1].push(node);
+  // 动态计算矩阵的大小
+  const maxDepth = getColumnDepth(root);
+  const maxWidth = getMaxWidth(root);
+  // 初始化矩阵
+  const matrix: Array<Array<ColumnItem>> = Array.from(
+    { length: maxDepth },
+    () => Array(maxWidth).fill("X")
+  );
+
+  function processNode(node: ColumnItem, level: number, position: number) {
+    if (level >= maxDepth || position >= maxWidth) return;
+    matrix[level][position] = node;
     if (node.children && node.children.length) {
-      queue.push(...node.children);
-      matrix[matrix.length - 1].push(
-        ...new Array(node.children.length - 1).fill("X")
-      );
+      let offset = position; // 从当前节点的位置开始放置子节点
+      node.children.forEach((child) => {
+        processNode(child, level + 1, offset);
+        offset += getMaxWidth(child); // 更新偏移量为子树的最大宽度
+      });
     }
   }
+
+  processNode(root, 0, 0);
   return matrix;
 }
 
@@ -134,62 +154,91 @@ function buildTableHeader(context: ExportOptions) {
   const headerRows: Array<Row> = [];
   const defaultBodyConfig = getDefaultBodyConfig(body);
   const leafNodeList: Array<ColumnItem> = [];
-  let startIndex = 1;
-  let endIndex = 1;
 
   for (let i = 0; i < headerRowsCount; i++) {
     const rowItem = sheet.addRow([]);
     rowItem.height = defaultBodyConfig.headerRowHeight;
     headerRows.push(rowItem);
   }
+  const matrix = getMatrix({ children: columns });
+  matrix.shift();
 
-  columns.forEach((item) => {
-    const matrix = getMatrix(item);
-    const maxWidth = Math.max(...matrix.map((item) => item.length));
-    if (matrix.length) {
-      matrix[0].push(...new Array(maxWidth - matrix[0].length).fill("X"));
-      leafNodeList.push(...matrix[matrix.length - 1].map((item) => item));
+  // 收集叶子节点
+  for (let col = 0; col < matrix[0].length; col++) {
+    let row = matrix.length - 1;
+    let cur = matrix[row][col];
+    while (cur === ("X" as any) && row >= 0) {
+      row--;
+      cur = matrix[row][col];
     }
-    endIndex += maxWidth;
-    matrix.forEach((item, index) => {
-      item.forEach((e, v) => {
-        const rowItem = headerRows[index];
-        const colNumber = startIndex + v;
-        const cell = rowItem.getCell(colNumber);
-        const defaultHeaderConfig = getDefaultHeaderConfig(e);
-        sheet.getColumn(colNumber).width = defaultHeaderConfig.width;
-        cell.value = e.title;
-        setCellStyles(cell, defaultHeaderConfig);
-        cell.alignment.horizontal = defaultHeaderConfig.headerAlign;
-      });
-    });
+    leafNodeList.push(cur);
+  }
 
-    // 纵向合并
-    const mergeRows = headerRowsCount - matrix.length;
-    if (mergeRows) {
-      const mergeNumber = headerRows[headerRows.length - 1].number;
-      for (let i = startIndex; i < endIndex; i++) {
-        sheet.mergeCells(mergeNumber, i, mergeNumber - mergeRows, i);
-      }
-    }
-    // 横向合并
-    matrix.forEach((item, index) => {
-      let start = startIndex,
-        end = startIndex;
-      const rowNumber = headerRows[index].number;
-      if (item.includes("X" as any)) {
-        item.forEach((e, v) => {
-          if (v === 0 || e === ("X" as any)) return (end += 1);
-          sheet.mergeCells(rowNumber, start, rowNumber, end - 1);
-          end += 1;
-          start = end - 1;
-        });
-        sheet.mergeCells(rowNumber, start, rowNumber, end - 1);
-      }
+  matrix.forEach((item, index) => {
+    item.forEach((e: any, v) => {
+      if (e === "X") return;
+      const rowItem = headerRows[index];
+      const colNumber = v + 1;
+      const cell = rowItem.getCell(colNumber);
+      const defaultHeaderConfig = getDefaultHeaderConfig(e);
+      sheet.getColumn(colNumber).width = defaultHeaderConfig.width;
+      cell.value = e.title;
+      setCellStyles(cell, defaultHeaderConfig);
+      cell.alignment.horizontal = defaultHeaderConfig.headerAlign;
     });
-
-    startIndex = endIndex;
   });
+  // 纵向合并
+  for (let col = 0; col < matrix[0].length; col++) {
+    for (let row = matrix.length - 1; row >= 0; row--) {
+      if (matrix[row][col] === ("X" as any)) {
+        let cur = row - 1;
+        while (cur >= 0) {
+          if (matrix[cur][col] !== ("X" as any)) {
+            const mergeStartIndex = headerRows[cur].number;
+            const mergeEndIndex = headerRows[row].number;
+            const mergeColIndex = col + 1;
+            sheet.mergeCells(
+              mergeStartIndex,
+              mergeColIndex,
+              mergeEndIndex,
+              mergeColIndex
+            );
+            for (let start = row; start > cur; start--) {
+              matrix[start][col] = "covered" as any;
+            }
+            row = cur;
+            break;
+          }
+          cur--;
+        }
+      }
+    }
+  }
+  // 横向合并
+  for (let row = 0; row < headerRowsCount; row++) {
+    for (let col = matrix[0].length - 1; col >= 0; col--) {
+      if (matrix[row][col] === ("X" as any)) {
+        let cur = col - 1;
+        while (cur >= 0) {
+          if (matrix[row][cur] !== ("X" as any)) {
+            const mergeStartIndex = cur + 1;
+            const mergeEndIndex = col + 1;
+            const mergeRowIndex = row + 1;
+            sheet.mergeCells(
+              mergeRowIndex,
+              mergeStartIndex,
+              mergeRowIndex,
+              mergeEndIndex
+            );
+            col = cur;
+            break;
+          }
+          cur--;
+        }
+      }
+    }
+  }
+
   return { leafNodeList };
 }
 
