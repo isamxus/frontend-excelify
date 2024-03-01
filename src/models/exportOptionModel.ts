@@ -1,8 +1,10 @@
-import { BorderStyle, FillPatterns, Workbook, Worksheet } from "exceljs";
+import { BorderStyle, FillPatterns, Workbook, Worksheet } from 'exceljs';
 
 export type Arrayable<T> = T | T[];
 
-export type ExportContextType = Arrayable<ExportOptions>;
+export type ExportContextType = Arrayable<ExportParamsType>;
+
+export type ExportParamsType = Omit<ExportOptions, keyof ContextAttribute>;
 
 export type CommonItemType = StyleOptions & FormatOptions;
 
@@ -21,7 +23,7 @@ export interface StyleOptions {
   width?: number;
   height?: number;
   size?: number;
-  align?: "center" | "left" | "right";
+  align?: 'center' | 'left' | 'right';
   bold?: boolean;
   fllType?: string;
   fillPattern?: FillPatterns;
@@ -43,6 +45,8 @@ export interface CellItem extends CommonItemType {
   rowEndIndex?: number;
   // 合并结束列索引
   colEndIndex?: number;
+  // 直接指定值
+  value?: string | number;
 }
 // 列项配置
 export interface ColumnItem extends CommonItemType {
@@ -51,11 +55,15 @@ export interface ColumnItem extends CommonItemType {
   // 多级表头
   children?: Array<ColumnItem>;
   // 表头单元格对齐方式
-  headerAlign?: "center" | "left" | "right";
+  headerAlign?: 'center' | 'left' | 'right';
+  // 是否序号列
+  showIndex?: boolean;
 }
 
 // 表格头部配置
-export interface HeaderOptions extends CommonItemType {}
+export interface HeaderOptions extends CommonItemType {
+  [key: string]: any;
+}
 
 // 表格表体配置
 export interface BodyOptions extends CommonItemType {
@@ -68,18 +76,32 @@ export interface BodyOptions extends CommonItemType {
 // 表格侧边配置
 export interface SideOptions extends CommonItemType {
   // 位置
-  position?: "left" | "right";
+  position?: 'left' | 'right';
 }
 
 // 表格底部配置
-export interface FooterOptions extends CommonItemType {}
+export interface FooterOptions extends CommonItemType {
+  [key: string]: any;
+}
+
+// 上下文信息
+export interface ContextInformation {
+  // 列配置叶子节点数量
+  columnleafNodeTotal: number;
+}
+
+// 上下文属性汇总
+export interface ContextAttribute {
+  // excelJs上下文
+  excelJs: Workbook;
+  // 工作表上下文
+  sheet: Worksheet;
+  // 上下文信息
+  context: ContextInformation;
+}
 
 // 导出配置
-export interface ExportOptions {
-  // excelJs上下文
-  excelJs?: Workbook;
-  // 工作表上下文
-  sheet?: Worksheet;
+export interface ExportOptions extends ContextAttribute {
   // sheet页签名
   name?: string;
   // 头部配置

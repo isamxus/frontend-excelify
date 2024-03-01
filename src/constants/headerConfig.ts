@@ -1,4 +1,4 @@
-import buildNormalHeader from "@/strategy/header/buildNormalHeader";
+import buildNormalHeader from "../strategy/header/buildNormalHeader";
 
 export const enum HeaderTypeEnum {
   NORMAL = "normal",

@@ -1,6 +1,6 @@
 {
   "name": "frontend-excelify",
-  "version": "0.0.3",
+  "version": "0.0.7",
   "description": "",
   "main": "dist/frontend-excelify.esm.js",
   "types": "dist/types/index.d.ts",
@@ -24,7 +24,6 @@
   },
   "devDependencies": {
     "@babel/core": "^7.23.9",
-    "@babel/preset-env": "^7.23.9",
     "@types/chai": "^4.3.11",
     "@types/mocha": "^10.0.6",
     "@types/node": "^20.11.10",
@@ -43,7 +42,6 @@
     "rimraf": "^5.0.5",
     "sinon": "^17.0.1",
     "ts-loader": "^9.5.1",
-    "ts-node": "^10.9.2",
     "typescript": "^5.3.3",
     "webpack": "^5.90.0",
     "webpack-cli": "^5.1.4",

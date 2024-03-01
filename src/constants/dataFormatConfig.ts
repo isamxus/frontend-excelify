@@ -1,8 +1,9 @@
 export const enum DataFormatTypeEnum {
-  BILLION = "billion",
-  TEN_THOUSAND = "ten-thousand",
-  NUMBER = "number",
-  PERCENT = "percent",
+  BILLION = "BILLION",
+  TEN_THOUSAND = "TEN_THOUSAND",
+  NUMBER = "NUMBER",
+  PERCENT = "PERCENT",
+  YUAN = "YUAN",
 }
 
 export const dataFormatTypeList = [
@@ -10,4 +11,5 @@ export const dataFormatTypeList = [
   DataFormatTypeEnum.NUMBER,
   DataFormatTypeEnum.PERCENT,
   DataFormatTypeEnum.TEN_THOUSAND,
+  DataFormatTypeEnum.YUAN,
 ] as Array<string>;

@@ -4,13 +4,10 @@ const commonConfig = {
   mode: "production",
   entry: "./src/index.ts",
   resolve: {
-    extensions: [".ts", ".js", ".vue", ".json"],
+    extensions: [".ts", ".js", ".json"],
     alias: {
       "@": path.resolve(__dirname, "src"),
     },
-  },
-  optimization: {
-    minimize: true,
   },
   module: {
     rules: [

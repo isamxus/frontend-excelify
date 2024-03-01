@@ -1,4 +1,4 @@
-import buildNormalSide from "@/strategy/side/buildNormalSide";
+import buildNormalSide from "../strategy/side/buildNormalSide";
 
 export const enum SideTypeEnum {
   NORMAL = "normal",

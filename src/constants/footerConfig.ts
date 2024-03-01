@@ -1,4 +1,4 @@
-import buildNormalFooter from "@/strategy/footer/buildNormalFooter";
+import buildNormalFooter from "../strategy/footer/buildNormalFooter";
 
 export const enum FooterTypeEnum {
   NORMAL = "normal",

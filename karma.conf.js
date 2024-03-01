@@ -36,7 +36,6 @@ module.exports = function (config) {
             use: {
               loader: "babel-loader",
               options: {
-                presets: ["@babel/preset-env"],
                 plugins: ["istanbul"],
               },
             },
@@ -48,7 +47,6 @@ module.exports = function (config) {
               {
                 loader: "babel-loader",
                 options: {
-                  presets: ["@babel/preset-env"],
                   plugins: ["istanbul"],
                 },
               },

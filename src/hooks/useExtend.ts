@@ -1,9 +1,9 @@
-import { bodyTypeMap } from "@/constants/bodyConfig";
-import { footerTypeMap } from "@/constants/footerConfig";
-import { headerTypeMap } from "@/constants/headerConfig";
-import { sideTypeMap } from "@/constants/sideConfig";
-import { tableTypeMap } from "@/constants/tableConfig";
-import { ExportOptions } from "@/models/exportOptionModel";
+import { bodyTypeMap } from "../constants/bodyConfig";
+import { footerTypeMap } from "../constants/footerConfig";
+import { headerTypeMap } from "../constants/headerConfig";
+import { sideTypeMap } from "../constants/sideConfig";
+import { tableTypeMap } from "../constants/tableConfig";
+import { ExportOptions } from "../models/exportOptionModel";
 
 function useExtend(map: Map<string, Function>) {
   function before(type: string, fn: (context: ExportOptions) => any) {

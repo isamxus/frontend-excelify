@@ -1,4 +1,4 @@
-import buildNormalTable from "@/strategy/table/buildNormalTable";
+import buildNormalTable from "../strategy/table/buildNormalTable";
 
 export const enum TableTypeEnum {
   NORMAL = "normal",

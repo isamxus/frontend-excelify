@@ -1,15 +1,4 @@
 {
-    "extends": "./tsconfig.json",
-    "compilerOptions": {
-      "module": "commonjs",
-      "target": "es5",
-      "lib": ["es5", "es6", "dom"],
-      "types": ["node"],
-      "noEmit": true,
-      "sourceMap": true,
-      "esModuleInterop": true
-    },
-    "include": ["tests/**/*.spec.ts", "src/**/*.ts"],
-    "exclude": ["node_modules"]
+    "extends": "./tsconfig.json"
   }
   

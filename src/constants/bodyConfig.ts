@@ -1,4 +1,4 @@
-import buildNormalBody from "@/strategy/body/buildNormalBody";
+import buildNormalBody from "../strategy/body/buildNormalBody";
 
 export const enum BodyTypeEnum {
   NORMAL = "normal",
